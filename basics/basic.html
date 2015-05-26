@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" data-ng-app="testApp">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <style>
+        .dynamic
+        {
+            background: #ddd;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body data-ng-controller="myCtrl">
+
+    First name: <input type="text" data-ng-model="fName"/><br />
+    Last name: <input type="text" data-ng-model="lName" /><br />
+    Full name: <p data-ng-bind="fName + ' ' + lName"></p>
+
+    <hr />
+    <!--static Numbers-->
+    <section class="shopping">
+        <h1>Static Grocery shopping:</h1><br />
+        <p>Item #1: <input type="text" data-ng-model="i1Name" /><input type="text" data-ng-model="i1Quant" /> $<input type="text" data-ng-model="i1Price"/></p> <!--can't use 'currency' filter in ng-models-->
+        <p>Item #2: <input type="text" data-ng-model="i2Name" /><input type="text" data-ng-model="i2Quant" /> $<input type="text" data-ng-model="i2Price "/></p>
+        <p class="gTotal"><span data-ng-bind="gItems"></span><span data-ng-bind="gQuant"></span><span data-ng-bind="gTotal | currency"></span></p><!--can use filters in ng-binds :D OH!-->
+    </section>
+    <section class="shopping dynamic">
+        <h1>Basic For Each Element</h1>
+		<p ng-repeat="x in names">{{x.name + " is from " + x.city}}</p>
+		<hr>
+		
+		<!--Able to change values-->
+		<p ng-repeat="y in names1"><input type="text" ng-model="y.name"><input type="text" ng-model="y.city"><br></p>
+		<aside><p ng-repeat="y in names1"><span ng-bind="y.name"></span> is from <span ng-bind="y.city"></span></p></aside>
+		<hr>
+		
+		<!--Let's go Shopping!-->
+		<h1>Basic Dynamic Grocery Shopping</h1>
+		<p ng-repeat="x in list">Name: <input type="text" ng-model="x.name"></input> Quanitity: <input type="number" ng-model="x.quant"></p>
+		<p>You spent <span ng-bind="listPriceTotal() | currency"></span> on <span ng-bind="listItemsTotal()"></span>  items!</p>
+
+    </section>
+   
+</body>
+</html>
+
+<script>
+    var testApp1 = angular.module("testApp", []);
+	
+    testApp1.controller("myCtrl", function ($scope) {
+        $scope.fName = "Deedee";
+        $scope.lName = "Chiang";
+
+        //static numbers
+        $scope.i1Name = "beans"; $scope.i2Name = "apples";
+        $scope.i1Quant = 2; $scope.i2Quant = 5;
+        $scope.i1Price = .20; $scope.i2Price = 1.29;
+		$scope.gItems = $scope.i1Name + " " + $scope.i2Name;
+        $scope.gQuant = " " + ($scope.i1Quant + $scope.i2Quant) + " items ";
+        $scope.gTotal = ($scope.i1Quant * $scope.i1Price) + ($scope.i2Quant * $scope.i2Price);
+
+		//for each
+		$scope.names = [{name:"joe", city:"LA"},{name:"DD", city:"Infinity"},{name:"vision internet", city:"crapton"}];
+		$scope.names1 = [{name:"joe", city:"LA"},{name:"DD", city:"Infinity"},{name:"vision internet", city:"crapton"}];
+
+		//dynamic shopping pt.1
+		$scope.list = [{name:"beans", quant: 120, price:  .25}, {name: "apples", quant: 4, price: 1.25}, {name: "bananas", quant: 5, price: 1.89 }, {name: "greens", quant: 2, price: .5}];
+		$scope.listItemsTotal = function() {
+			totalItems = 0;
+			c = 0;
+			listL = $scope.list.length;
+			
+			for (;c<listL;)
+			{
+				totalItems = totalItems + $scope.list[c].quant;
+				//totalItems += $scope.list[c].quant;
+				c++;
+			}
+			
+			return parseInt(totalItems);
+		}
+		$scope.listPriceTotal = function() {
+			totalPrice = 0;
+			pc = 0;
+			listL = $scope.list.length;
+			
+			for (;pc<listL;) {
+				totalPrice = totalPrice + ($scope.list[pc].price * $scope.list[pc].quant);
+				pc++;
+			}
+			return totalPrice;
+		}
+		
+    });
+</script>

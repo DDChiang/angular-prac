@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" data-ng-app="testApp">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <style>
+        .dynamic
+        {
+            background: #ddd;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+		
+		ul {width: 100%; margin: 0; padding: 0;}
+		ul li {margin: 0; padding: 0; list-style-type: none;}
+		ul li span { display: block; float: left;}
+		
+		.odd
+		{
+			background: #ff9900;
+		}	
+		
+		.small
+		{
+			width: 50%;
+			
+		}
+		
+		.big
+		{
+			width: 100%;
+			background: red;
+		}
+		
+		
+    </style>
+</head>
+<body>
+	<section ng-app="table" ng-controller="tableCtrl">
+		
+		<h1>FILTER and ORDERBYS AHOY!</h1>
+		Search<input type="text" ng-model="query">
+		<button ng-click="resetQuery()">Reset</button>
+		
+		<!-- Filters <button ng-click="byCountry()">Filter by Country</button>
+		Filters <button ng-click="byCity()">Filter by City</button> -->
+		
+		Filters <button ng-click="changeOrder('Country')">Filter by Country</button>
+		Filters <button ng-click="changeOrder('City')">Filter by City</button>
+		
+		<hr>
+		<!--Toggle Hide-->
+		
+		<ul style="max-width: 700px;">
+			<li ng-repeat="x in records | filter: query | orderBy: listOrder">
+				
+				<span ng-if="$odd" class="odd small" ng-bind="x.Name"></span>
+				<span ng-if="$even" class="small" ng-bind="x.Name"></span>
+				<span ng-if="$odd" class="odd small" ng-bind="x.City"></span>
+				<span ng-if="$even" class="small" ng-bind="x.City"></span>
+				<p>
+					<button ng-click="toggleSpan = !toggleSpan">Toggle Span</button>	<!--for indiv elem show/hide : use inline statements-->
+					<span ng-if="$odd" class="odd big" ng-bind="x.Country" ng-hide="toggleSpan"></span>
+					<span ng-if="$even" class=" big" ng-bind="x.Country" ng-hide="toggleSpan"></span>
+				</p>
+			</li>
+		</ul>
+	</section>
+</body>
+</html>
+
+<script>
+	var app0 = angular.module("table", []);
+	app0.controller("tableCtrl", function($scope, $http) {
+		$http.get("http://www.w3schools.com/angular/customers.php")
+		.success(function(response) { $scope.records = response.records});
+		
+		//$scope.query = "Type in your search query";
+		$scope.master = "";
+		
+		$scope.resetQuery = function() {
+			$scope.query = "";	//<-- can also $scope.query = angular.copy($scope.master);
+			$scope.listOrder = 'Name';
+		};
+		
+		$scope.resetQuery();
+		
+				//orderBy filters (old school: hard coded)
+				$scope.listOrder = 'Name';
+				$scope.byCountry = function() {
+					$scope.listOrder = 'Country';
+				};
+				$scope.byCity = function() {
+					$scope.listOrder = 'City';
+				};
+		
+		//MORE DYNAMIC FILTERS (New school!)
+		$scope.changeOrder = function(filterVal) {
+			$scope.listOrder = filterVal;
+		};
+		
+		
+	});
+</script>

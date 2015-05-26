@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+</head>
+<body>
+    <div data-ng-app="myApp" ng-controller="myCtrl">
+        <p>Type your name here:</p><input type="text" placeholder="your name" data-ng-model="name"/>
+        <p data-ng-bind="name"></p>
+
+        <div data-ng-init="firstName='Joey'">    <!--data-ng-init init var firstName-->
+            <p>His name is : <span data-ng-bind="firstName"></span></p>
+        </div>
+
+        <p>{{ 5 + 5}}</p>
+        <hr />
+        <div >
+            <p>A.name</p><input type="text" data-ng-model="aName"/>
+            <p>B Name</p><input type="text" data-ng-model="bName" />
+            <p>{{aName + " " + bName}}</p>
+        </div>
+        <hr />
+        <div ng-init="beans=2;price=1.29;tax=.098"> 
+            Olden time way of init var<br />
+            <p>subtotal: {{beans*price | currency}}</p>
+            <p><span ng-bind="beans*price*(1+tax) | currency"></span></p>
+        </div>
+        <hr />
+        <div>
+            Better way (w script)<br />
+            <p>Subtotl:<span>{{subT | currency}}</span></p>
+            <p>Total:<span> <!--ng-model="beanTotal | currency"<= ng-model only init. still need to bind or use expressions--> {{beanTotal | currency}}</span></p>
+        </div>
+        <hr />
+        <div ng-init="cat={name: 'Tabby', weight: 100, height: 40}">
+            Objects using reg init:<br />
+            <p>Its name is {{cat.name}} and he's <span ng-bind="cat.weight"></span> pounds heavy!</p>
+        </div>
+        <hr />
+        <div ng-init="cats=['tabby', 'cheshire', 'bunnykiller']">
+            Arrays older<br />
+            <p >{{whichCat}}</p>
+            
+        </div>
+        <div>
+            Arrays cleaner<br />
+            <p ng-bind="whoCat"></p>
+            
+        </div>
+        <hr />
+        <div ng-init="he='gerry'">
+            <input type="text" ng-model="he"></input>
+            <p>{{he}}</p>
+        </div>
+        <div>
+            <p data-ng-bind="sherry.iq"></p>
+        </div>
+        <div ng-init="color='green';weight='heavy'">
+            <input ng-model="color" />
+            <input ng-model="weight"/>
+            <p ng-bind="'The apple is ' + color + ' ' + 'and ' + weight"></p>
+        </div>
+        <!--===========PROGRESS!=====================-->
+
+        <div>
+            Objects using cleaner script way
+        </div>
+    </div>
+    
+        <script>
+            //when add controller, must init app with script
+            var app = angular.module('myApp', []);
+            app.controller('myCtrl', function ($scope) {
+
+            //angular variables can be init 2 ways
+                //1. in here as a "prop" of $scope <-- best way
+                //2. via "ng-init="quanitity=1;cost=5"
+            $scope.aName = "aaaaa";
+            $scope.bName = "bbbbbooobby";
+
+            $scope.beanQ = 24;
+            $scope.beanP = .05;
+            $scope.beanTax = .01;
+            $scope.subT = $scope.beanQ*$scope.beanP;
+            $scope.beanTotal = $scope.subT*(1 + $scope.beanTax);
+
+            $scope.cats2 = ["tabby", "cheshire", "bunnyKiller"];
+            $scope.whichCat = $scope.cats2[2];
+            $scope.whoCat = $scope.cats2[2];
+
+            $scope.sherry = { name: 'sherry', age: 24, weight: 100, height: 50 };
+            $scope.sherry.iq = $scope.sherry.age * $scope.sherry.weight * $scope.sherry.height;
+            });
+        </script>
+</body>
+</html>

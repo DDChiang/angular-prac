@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" data-ng-app="testApp">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <style>
+        .dynamic
+        {
+            background: #ddd;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+	<div ng-app="testerApp" ng-controller="myCtrl">
+		<ul>
+			<li ng-repeat="x in names">{{x.Name + " living in " + x.City}}</li>
+		</ul>
+		<hr>
+		<!--Table -->
+		<table>
+			<tr ng-repeat="x in names">
+				<td ng-bind="x.Name"></td>
+				<td ng-bind="x.City"></td>
+			</tr>
+		</table>
+		<hr>
+		<!-- Table with Filter #!: orderBy -->
+		<table style="background:#ddd;">
+			<tr ng-repeat="x in names | orderBy : 'Country'">
+				<td ng-bind="$index + 1"></td>	<!--"$index is a native angular prop for elem array"-->
+				<td ng-bind="x.Name"></td>
+				<td ng-bind="x.City"></td>
+				<td ng-bind="x.Country | uppercase"></td>
+			</tr>
+		</table>
+		<!--Table with Even/Odd-->
+		<table>
+			<tr ng-repeat="x in names">
+				<td ng-if="$odd" style="background: #8AC007;">{{$index+1}}</td>
+				<td ng-if="$even">{{$index+1}}.</td>
+				<td ng-if="$odd" style="background: #8AC007;">{{x.Name}}</td>
+				<td ng-if="$even">{{x.Names}}</td>
+				<td ng-if="$odd" style="background: #8AC007;">{{x.City}}</td>
+				<td ng-if="$even">{{x.City}}.</td>
+				<td ng-if="$odd" style="background: #8AC007;">{{x.Country | uppercase}}</td>
+				<td ng-if="$even">{{x.Country | uppercase}}.</td>
+				
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
+
+<script>
+	var testerApp = angular.module("testerApp", []);
+	testerApp.controller("myCtrl", function($scope, $http) {
+		$http.get("http://www.w3schools.com/angular/customers.php")
+		.success(function(response) { $scope.names = response.records; });
+	});
+	
+</script>

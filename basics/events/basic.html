@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" data-ng-app="testApp">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <style>
+        .dynamic
+        {
+            background: #ddd;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+		
+		ul {width: 100%; margin: 0; padding: 0;}
+		ul li {margin: 0; padding: 0; list-style-type: none;}
+		ul li span { display: block; float: left;}
+		
+		.odd
+		{
+			background: #ff9900;
+		}	
+		
+		.small
+		{
+			width: 50%;
+			
+		}
+		
+		.big
+		{
+			width: 100%;
+			background: red;
+		}
+		
+		
+		
+    </style>
+</head>
+<body>
+	<section ng-app="table" ng-controller="tableCtrl">
+		
+		<button id="logger" ng-disabled="switch">Loggers</button><br>
+		<input type="checkbox" ng-model="switch">Chck to activate</input>
+		<Br>
+		<hr>
+		<!--Toggle Hide-->
+		<button id="toggleView" ng-click="toggleView()">Show/Hide Table</button><Br>
+		<ul style="max-width: 700px;" ng-hide="toggleList">
+			<li ng-repeat="x in records">
+				
+				<span ng-if="$odd" class="odd small" ng-bind="x.Name"></span>
+				<span ng-if="$even" class="small" ng-bind="x.Name"></span>
+				<span ng-if="$odd" class="odd small" ng-bind="x.City"></span>
+				<span ng-if="$even" class="small" ng-bind="x.City"></span>
+				<p>
+					<button ng-click="toggleSpan = !toggleSpan">Toggle Span</button>	<!--for indiv elem show/hide : use inline statements-->
+					<span ng-if="$odd" class="odd big" ng-bind="x.Country" ng-show="toggleSpan"></span>
+					<span ng-if="$even" class=" big" ng-bind="x.Country" ng-show="toggleSpan"></span>
+				</p>
+			</li>
+		</ul>
+	</section>
+</body>
+</html>
+
+<script>
+	var app0 = angular.module("table", []);
+	app0.controller("tableCtrl", function($scope, $http) {
+		$http.get("http://www.w3schools.com/angular/customers.php")
+		.success(function(response) { $scope.records = response.records});
+		
+		$scope.switch = true;
+		$scope.grill = 0;
+		
+		//$scope.toggleSpan = function() {	//accidentally affects ALL	//use for another structure
+		//	$scope.toggleShow = !$scope.toggleShow;
+		//} 
+		
+		$scope.toggleView = function() {
+			$scope.toggleList = !$scope.toggleList;
+		};
+		
+		
+	});
+</script>

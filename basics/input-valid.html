@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" data-ng-app="testApp">
+<head>
+    <meta charset="utf-8" />
+    <title>Input Validation</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+</head>
+<body>
+	<section style="background: #ddd; box-sizing: border-box; padding: 10px;">
+		<h1>Input Data Validation</h1>
+		<form name="myTree" ng-app="formApp" ng-controller="formCtrl" autocomplete="on" novalidate
+			<p>
+				Username:<br>
+				<input type="text" name="user" ng-model="user" required>
+				<span style="color :red" ng-show="myTree.user.$dirty && myTree.user.$invalid">something wrong</span>	<!--myTree <- ref form name  .user  <-- refers to input ELEM (NOT MODEL) name -->
+				<span style="color: blue" ng-show="myTree.user.$error.required">User Name is required</span>
+				<span style="color: green" ng-show="myTree.user.$dirty && myTree.user.$valid">Good to go!</span>
+			</p>
+			<p>
+				Email:<br>
+				<input type="email" name="email" ng-model="email" required>
+				<span style="color: red" ng-show="myTree.email.$dirty && myTree.email.$invalid">something wrong</span>	<!--$invalid looks to see if email matches "email" type in html5 elem-->
+				<span style="color:blue" ng-show="myTree.email.$error.required">Email is required</span>
+				<span style="color: blue" ng-show="myTree.email.$error.email">Invalid Emial address</span>
+				<span style="color: green" ng-show="myTree.email.$dirty && myTree.email.$valid">Green light!</span>
+			</p>
+			<button ng-disabled="myTree.user.$dirty && myTree.user.$invalid || myTree.email.$dirty && myTree.email.$invalid">SUBMIT!</button>
+			
+		</form>
+	</section>
+</body>
+</html>
+
+<script>
+	var app0 = angular.module("formApp", []);
+	
+	app0.controller("formCtrl", function($scope) {
+		$scope.user = "Jane Doe";
+		$scope.email = "john.doe@gmail.com";
+	});
+</script>
